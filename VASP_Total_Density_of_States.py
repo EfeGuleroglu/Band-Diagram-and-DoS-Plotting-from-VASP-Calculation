@@ -1,4 +1,4 @@
-# Last update: 31.03.2024
+# Last update: 10.05.2024
 #
 # This code takes TDOS.dat and OUTCAR as input files.
 # You need of specify the directories of those files in the very first lines of this code.
@@ -16,13 +16,17 @@ OUTCAR = "OUTCAR"
 TITLE_OF_PLOT = ""
 set_fermi_energy_to_zero = True
 
-# Open the file and search for the Fermi energy line
-with open(OUTCAR, 'r') as file:
-    for line in file:
-        if "Fermi energy:" in line:
-            # Extract the energy value from the line
-            fermi_energy = float(line.split(":")[-1].strip())
-            break  # Exit the loop once the Fermi energy is found
+# Open the OUTCAR file in read mode
+with open("OUTCAR", "r") as file:
+    # Read the file in reverse order
+    lines = reversed(file.readlines())
+
+# Iterate through the lines
+for line in lines:
+    # Check if the line contains the Fermi energy information
+    if "BZINTS: Fermi energy:" in line:
+        # Extract the Fermi energy value without the semicolon
+        fermi_energy = float(line.split()[3].rstrip(';'))
 
 # Check if Fermi energy is found
 if fermi_energy is not None:
